@@ -11,13 +11,18 @@ import {
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import ReactPlayer from 'react-player';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+
 
 const BASE_URL='https://api.boardgameatlas.com/api/search?name=';
 const client_id='&client_id=8KFAfbV6gn'
-// const search_limit='&limit=10'
 const mechanics_url='https://api.boardgameatlas.com/api/game/mechanics?client_id=8KFAfbV6gn'
 const categories_url='https://api.boardgameatlas.com/api/game/categories?client_id=8KFAfbV6gn'
 const videos_url='https://api.boardgameatlas.com/api/game/videos?client_id=8KFAfbV6gn&order_by=view_count&game_id='
+const random_url='&random=true'
+const pictures_url='https://api.boardgameatlas.com/api/game/images?client_id=8KFAfbV6gn'
+
 class App extends React.Component{
   render(){
     return(
@@ -25,10 +30,10 @@ class App extends React.Component{
         <div>
             <ul>
               <li>
-                <Link to ="/">Home</Link>
+                <Link to ="/">Rando Boardo</Link>
               </li>
               <li>
-                <Link to="/search">Search</Link>
+                <Link to="/search">Search for a Board Game</Link>
               </li>
             </ul>
         </div>
@@ -46,10 +51,37 @@ class App extends React.Component{
   }
 }
 class Home extends React.Component{
+  constructor (props){
+    super(props);
+    this.state={};
+  }
+  componentDidMount(){
+    this.getRandomGame()
+  }
+  async getRandomGame(e){
+    try{
+      const res = await axios.get(BASE_URL+random_url+client_id)
+      this.setState({board:res.data.games})
+      const picturesRes = await axios.get(pictures_url+`&game_id=${this.state.board[0].id}`)
+      this.setState({pictures:picturesRes.data.images})
+    }catch(e){
+      console.error(e)
+    }
+  }
   render(){
+    if(!this.state.board){
+      return(
+        <div>Welcome
+          <div>Loading Content</div>
+        </div>
+      )
+    }
     return(
-      <div>
+      <div id='homeContainer'>
         <h1>Welcome</h1>
+        <h2>Here is your Rando Boardo!</h2>
+        <RandomBoard board={this.state.board} pictures={this.state.pictures} />
+        {console.log(this.state.board[0].name)}
       </div>
     )
   }
@@ -179,8 +211,8 @@ class Details extends React.Component{
   }
   async getVideo(e){
     try{
-      let game_id=this.state.board.id
-      const vidRes= await axios.get(videos_url+game_id)
+      let game_id = this.state.board.id
+      const vidRes = await axios.get(videos_url+game_id)
       this.setState({videos:vidRes.data.videos})
     } catch(e){
       console.error(e)
@@ -194,6 +226,7 @@ class Details extends React.Component{
         <div className="popPlayers">{this.state.board.min_players} - {this.state.board.max_players} Players</div>
         <div className="popTime">{this.state.board.min_playtime} - {this.state.board.max_playtime} minutes</div>
         <div className="popAge">Minimum recommended age: {this.state.board.min_age}</div>
+        <hr />
         <div className="popDescription">
           Description:
           {parse(`${this.state.board.description}`)}
@@ -202,20 +235,39 @@ class Details extends React.Component{
         <h5>Mechanics: 
             {this.id_check(this.state.board.mechanics,this.state.mechanics)}
         </h5>
+        <hr />
         {this.state.videos&&this.state.videos.map(boardGames=>
           <div className='popVideoContainer'>
             <div>Title: {boardGames.title}</div>
             <div>Views: {boardGames.views}</div>
             <ReactPlayer url={boardGames.url} />
           </div>)}
-        
-      </div>
-  
-
-      
+      </div>  
     )
   }
 }
-
+const RandomBoard=props=>
+  <div id="randomContainer">
+    <div>{props.board[0].name}</div>
+    <div>
+      <img src={props.board[0].images.medium} alt='' />
+    </div>
+    <div>Year Released: {props.board[0].year_published}</div>
+    <div>{props.board[0].min_players} - {props.board[0].max_players} players</div>
+    <div>{props.board[0].min_playtime} - {props.board[0].max_playtime} minutes</div>
+    <div>Age {props.board[0].min_age} and up.</div>
+    <div>{parse(`${props.board[0].description}`)}</div>
+    {console.log(props.pictures)}
+    <div id="picturesContainer">
+    <Carousel width='550px' dynamicHeight='true'>
+      {props.pictures && props.pictures.map(pictures =>
+        <div className="carImage">
+          <img src={pictures.large} />
+        </div>
+      
+      )}
+    </Carousel>
+    </div>
+  </div>;
 
 export default App;
