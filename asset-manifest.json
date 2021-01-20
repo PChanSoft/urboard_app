@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/urboard_app/static/css/main.494612ff.chunk.css",
-    "main.js": "/urboard_app/static/js/main.c7613326.chunk.js",
-    "main.js.map": "/urboard_app/static/js/main.c7613326.chunk.js.map",
+    "main.js": "/urboard_app/static/js/main.e2e49ac2.chunk.js",
+    "main.js.map": "/urboard_app/static/js/main.e2e49ac2.chunk.js.map",
     "runtime-main.js": "/urboard_app/static/js/runtime-main.546aca5f.js",
     "runtime-main.js.map": "/urboard_app/static/js/runtime-main.546aca5f.js.map",
     "static/css/2.2a70f6c1.chunk.css": "/urboard_app/static/css/2.2a70f6c1.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.2a70f6c1.chunk.css",
     "static/js/2.383cf01a.chunk.js",
     "static/css/main.494612ff.chunk.css",
-    "static/js/main.c7613326.chunk.js"
+    "static/js/main.e2e49ac2.chunk.js"
   ]
 }
