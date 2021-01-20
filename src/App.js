@@ -63,7 +63,9 @@ class Home extends React.Component{
       const res = await axios.get(BASE_URL+random_url+client_id)
       this.setState({board:res.data.games})
       const picturesRes = await axios.get(pictures_url+`&game_id=${this.state.board[0].id}`)
-      this.setState({pictures:picturesRes.data.images})
+      const categoriesRes= await axios.get(categories_url);
+      const mechanicsRes= await axios.get(mechanics_url);
+      this.setState({pictures:picturesRes.data.images, mech_data:mechanicsRes.data.mechanics, cat_data:categoriesRes.data.categories})
     }catch(e){
       console.error(e)
     }
@@ -80,8 +82,8 @@ class Home extends React.Component{
       <div id='homeContainer'>
         <h1>Welcome</h1>
         <h2>Here is your Rando Boardo!</h2>
-        <RandomBoard board={this.state.board} pictures={this.state.pictures} />
-        {console.log(this.state.board[0].name)}
+        {this.state.board && this.state.cat_data ? <RandomBoard board={this.state.board} pictures={this.state.pictures} board_cat={this.state.cat_data} board_mech={this.state.mech_data}/> : `Loading`}
+
       </div>
     )
   }
@@ -256,18 +258,39 @@ const RandomBoard=props=>
     <div>{props.board[0].min_players} - {props.board[0].max_players} players</div>
     <div>{props.board[0].min_playtime} - {props.board[0].max_playtime} minutes</div>
     <div>Age {props.board[0].min_age} and up.</div>
+    <div><IdCatMatcher board={props.board[0].categories} board_cats={props.board_cat} board_mech={props.board_mech} /></div>
     <div>{parse(`${props.board[0].description}`)}</div>
-    {console.log(props.pictures)}
     <div id="picturesContainer">
     <Carousel width='550px' dynamicHeight='true'>
       {props.pictures && props.pictures.map(pictures =>
         <div className="carImage">
-          <img src={pictures.large} />
+          <img src={pictures.large} alt='' />
         </div>
       
       )}
     </Carousel>
     </div>
   </div>;
-
+const IdCatMatcher=props=>{
+  var result = [];
+  console.log(`Board Game Categories: ` + props.board)
+  console.log(`Categories: `+props.board_cats[0])
+  if(props.board.length > 0){
+    for (let i=0;i < props.board.length;i++){
+      for(let j=0;j<props.board_cat.length;i++){
+        if(props.board_cat[j].id===props.board[i].id){
+          result.push(props.board_cat[j].name)
+        }
+      }
+    }
+    return result.map(result =>
+    <div>
+      <li>
+        {result}
+      </li>
+    </div>)
+}else{
+  return <p>N/A</p>
+  }
+}
 export default App;
