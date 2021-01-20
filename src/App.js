@@ -73,9 +73,7 @@ class Home extends React.Component{
   render(){
     if(!this.state.board){
       return(
-        <div>Welcome
-          <div>Loading Content</div>
-        </div>
+          <h2>...Loading Content...</h2>
       )
     }
     return(
@@ -258,10 +256,14 @@ const RandomBoard=props=>
     <div>{props.board[0].min_players} - {props.board[0].max_players} players</div>
     <div>{props.board[0].min_playtime} - {props.board[0].max_playtime} minutes</div>
     <div>Age {props.board[0].min_age} and up.</div>
-    <div><IdCatMatcher board={props.board[0].categories} board_cats={props.board_cat} board_mech={props.board_mech} /></div>
+    <h3>Categories</h3>
+    <div><IdCatMatcher board={props.board[0].categories} board_cats={props.board_cat} /></div>
+    <h3>Mechanics</h3>
+    <div><IdMechMatcher board={props.board[0].mechanics} board_mech={props.board_mech} /></div>
+    <h3>Description</h3>
     <div>{parse(`${props.board[0].description}`)}</div>
     <div id="picturesContainer">
-    <Carousel width='550px' dynamicHeight='true'>
+    <Carousel width='600px' dynamicHeight='true'>
       {props.pictures && props.pictures.map(pictures =>
         <div className="carImage">
           <img src={pictures.large} alt='' />
@@ -273,24 +275,39 @@ const RandomBoard=props=>
   </div>;
 const IdCatMatcher=props=>{
   var result = [];
-  console.log(`Board Game Categories: ` + props.board)
-  console.log(`Categories: `+props.board_cats[0])
   if(props.board.length > 0){
     for (let i=0;i < props.board.length;i++){
-      for(let j=0;j<props.board_cat.length;i++){
-        if(props.board_cat[j].id===props.board[i].id){
-          result.push(props.board_cat[j].name)
+      for(let j=0;j<props.board_cats.length;j++){
+        if(props.board_cats[j].id===props.board[i].id){
+          result.push(props.board_cats[j].name)
         }
       }
     }
     return result.map(result =>
-    <div>
       <li>
         {result}
       </li>
-    </div>)
+)
 }else{
   return <p>N/A</p>
+  }
+}
+const IdMechMatcher=props=>{
+  var result = [];
+  if(props.board.length > 0){
+    for(let i=0;i < props.board.length;i++){
+      for(let j=0;j<props.board_mech.length;j++){
+        if(props.board_mech[j].id===props.board[i].id){
+          result.push(props.board_mech[j].name)
+        }
+      }
+    }
+    return result.map(result =>
+        <li>
+          {result}
+        </li>)
+  }else{
+    return <p>N/A</p>
   }
 }
 export default App;
