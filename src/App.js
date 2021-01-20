@@ -7,6 +7,7 @@ import {
   Switch,
   Route,
   Link,
+  Redirect,
 } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
@@ -30,20 +31,26 @@ class App extends React.Component{
         <div>
             <ul>
               <li>
-                <Link to ="/">Rando Boardo</Link>
+                <Link to ="/urboard_app">Rando Boardo</Link>
               </li>
               <li>
-                <Link to="/search">Search for a Board Game</Link>
+                <Link to="/urboard_app/search">Search for a Board Game</Link>
+              </li>
+              <li>
+                <Link to = "/urboard_app/about">About this site</Link>
               </li>
             </ul>
         </div>
         <hr />
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/urboard_app">
             <Home />
           </Route>
-          <Router path="/search">
+          <Router path="/urboard_app/search">
             <Search />
+          </Router>
+          <Router path="/urboard_app/about">
+            <About />
           </Router>
         </Switch>
       </Router>
@@ -80,7 +87,7 @@ class Home extends React.Component{
       <div id='homeContainer'>
         <h1>Welcome</h1>
         <h2>Here is your Rando Boardo!</h2>
-        {this.state.board && this.state.cat_data ? <RandomBoard board={this.state.board} pictures={this.state.pictures} board_cat={this.state.cat_data} board_mech={this.state.mech_data}/> : `Loading`}
+        {this.state.board && this.state.cat_data ? <RandomBoard board={this.state.board} pictures={this.state.pictures} board_cat={this.state.cat_data} board_mech={this.state.mech_data}/> : `Waiting...`}
 
       </div>
     )
@@ -122,7 +129,7 @@ class Search extends React.Component{
     if (!this.state.board){
       return(
       <div>
-        <h1>Welcome to URBoard</h1>
+        <h1>URBoard Search</h1>
       <form onSubmit={this.getSearch} onChange={this.handleChange}>
         <input type="text" name="grab" />
         <input type="submit" />
@@ -133,7 +140,7 @@ class Search extends React.Component{
     if (this.state.board.games.length === 0){
       return (
         <div>
-        <h1>Welcome to URBoard</h1>
+        <h1>URBoard Search</h1>
       <form onSubmit={this.getSearch} onChange={this.handleChange}>
         <input type="text" name="grab" />
         <input type="submit" />
@@ -144,7 +151,7 @@ class Search extends React.Component{
     }
     return(
       <div>
-        <h1>Welcome to URBoard</h1>
+        <h1>URBoard Search</h1>
       <form onSubmit={this.getSearch} onChange={this.handleChange}>
         <input type="text" name="grab" />
         <input type="submit" />
@@ -155,6 +162,11 @@ class Search extends React.Component{
               <div className='gameTitle'>{boardGames.name}</div>
               <div className='gameYear'>{boardGames.year_published}</div>
               <div className='gamePrice'>Price: {boardGames.price}</div>
+              <div><Redirect to={{
+                pathname: '/urboard_app/about',
+              state:{about:boardGames.id}
+            }} />
+            </div>
                 <Popup trigger={<button>Details</button>} modal>
                     <div>
                       <Details boardId={boardGames} boardCat={this.state.cat_data.categories} boardMech={this.state.mech_data.mechanics} />
@@ -194,6 +206,7 @@ class Details extends React.Component{
       for (let i=0; i<data_Id.length;i++){
         if(game_Id[j].id===data_Id[i].id){ 
           result.push(data_Id[i].name)
+          break;
         }
       }
     }
@@ -222,10 +235,10 @@ class Details extends React.Component{
     return(
       <div className="popContainer">
         <div className="popTitle">{this.state.board.name}</div>
-        <div className="popYear">Year Published: {this.state.board.year_published}</div>
-        <div className="popPlayers">{this.state.board.min_players} - {this.state.board.max_players} Players</div>
-        <div className="popTime">{this.state.board.min_playtime} - {this.state.board.max_playtime} minutes</div>
-        <div className="popAge">Minimum recommended age: {this.state.board.min_age}</div>
+        <Year year={this.state.board.year_published} />
+        <MinMaxPlayers min={this.state.board.min_players} max={this.state.board.max_players} />
+        <MinMaxTime min={this.state.board.min_playtime} max={this.state.board.max_playtime} />
+        <Age age={this.state.board.min_age} />
         <hr />
         <div className="popDescription">
           Description:
@@ -239,27 +252,33 @@ class Details extends React.Component{
         {this.state.videos&&this.state.videos.map(boardGames=>
           <div className='popVideoContainer'>
             <div>Title: {boardGames.title}</div>
-            <div>Views: {boardGames.views}</div>
             <ReactPlayer url={boardGames.url} />
           </div>)}
       </div>  
     )
   }
 }
+class About extends React.Component{
+  render(){
+    return(
+      <h1>About This App</h1>
+    )
+  }
+}
 const RandomBoard=props=>
   <div id="randomContainer">
-    <div>{props.board[0].name}</div>
+    <h2>{props.board[0].name}</h2>
     <div>
       <img src={props.board[0].images.medium} alt='' />
     </div>
-    <div>Year Released: {props.board[0].year_published}</div>
-    <div>{props.board[0].min_players} - {props.board[0].max_players} players</div>
-    <div>{props.board[0].min_playtime} - {props.board[0].max_playtime} minutes</div>
-    <div>Age {props.board[0].min_age} and up.</div>
-    <h3>Categories</h3>
-    <div><IdCatMatcher board={props.board[0].categories} board_cats={props.board_cat} /></div>
-    <h3>Mechanics</h3>
-    <div><IdMechMatcher board={props.board[0].mechanics} board_mech={props.board_mech} /></div>
+    <Year year={props.board[0].year_published} />
+    <MinMaxPlayers min={props.board[0].min_players} max={props.board[0].max_players}/>
+    <MinMaxTime min={props.board[0].min_playtime} max={props.board[0].max_playtime} />
+    <Age age={props.board[0].min_age} />
+    <h4>Categories</h4>
+    <ul><IdCatMatcher board={props.board[0].categories} board_cats={props.board_cat} /></ul>
+    <h4>Mechanics</h4>
+    <ul><IdMechMatcher board={props.board[0].mechanics} board_mech={props.board_mech} /></ul>
     <h3>Description</h3>
     <div>{parse(`${props.board[0].description}`)}</div>
     <div id="picturesContainer">
@@ -280,6 +299,7 @@ const IdCatMatcher=props=>{
       for(let j=0;j<props.board_cats.length;j++){
         if(props.board_cats[j].id===props.board[i].id){
           result.push(props.board_cats[j].name)
+          break;
         }
       }
     }
@@ -299,6 +319,7 @@ const IdMechMatcher=props=>{
       for(let j=0;j<props.board_mech.length;j++){
         if(props.board_mech[j].id===props.board[i].id){
           result.push(props.board_mech[j].name)
+          break;
         }
       }
     }
@@ -308,6 +329,67 @@ const IdMechMatcher=props=>{
         </li>)
   }else{
     return <p>N/A</p>
+  }
+}
+const MinMaxPlayers=props=>{
+  if(props.min > 0 && props.min===props.max){
+    if(props.min === 1){
+      return (
+        <div>{props.min} Player</div>
+      )
+    }else{
+      return (
+      <div>{props.min} Players</div>
+    )
+      }
+  }else if(props.min < props.max){
+    return(
+      <div>{props.min} - {props.max} Players</div>
+    )
+  }else{
+    return(
+      <div></div>
+    )
+  }
+}
+
+const MinMaxTime=props=>{
+  if(props.min > 0 && props.min===props.max){
+    return(
+      <div>{props.min} minutes</div>
+    )
+  }else if(props.min < props.max){
+    return (
+      <div>{props.min} - {props.max} minutes</div>
+    )
+  }else{
+    return(
+      <div></div>
+    )
+  }
+}
+
+const Age=props=>{
+  if(props.age > 0){
+    return(
+      <div>For ages {props.age} and up</div>
+    )
+  }else{
+    return(
+      <div></div>
+    )
+  }
+}
+
+const Year=props=>{
+  if(props.year > 0){
+    return(
+      <div>Year Released: {props.year}</div>
+    )
+  }else{
+    return(
+      <div></div>
+    )
   }
 }
 export default App;
