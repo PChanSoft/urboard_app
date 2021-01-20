@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/PChanSoft/urboard_app/static/css/main.494612ff.chunk.css",
+    "main.js": "/PChanSoft/urboard_app/static/js/main.90a7411c.chunk.js",
+    "main.js.map": "/PChanSoft/urboard_app/static/js/main.90a7411c.chunk.js.map",
+    "runtime-main.js": "/PChanSoft/urboard_app/static/js/runtime-main.177efa04.js",
+    "runtime-main.js.map": "/PChanSoft/urboard_app/static/js/runtime-main.177efa04.js.map",
+    "static/css/2.2a70f6c1.chunk.css": "/PChanSoft/urboard_app/static/css/2.2a70f6c1.chunk.css",
+    "static/js/2.383cf01a.chunk.js": "/PChanSoft/urboard_app/static/js/2.383cf01a.chunk.js",
+    "static/js/2.383cf01a.chunk.js.map": "/PChanSoft/urboard_app/static/js/2.383cf01a.chunk.js.map",
+    "static/js/3.145ef71d.chunk.js": "/PChanSoft/urboard_app/static/js/3.145ef71d.chunk.js",
+    "static/js/3.145ef71d.chunk.js.map": "/PChanSoft/urboard_app/static/js/3.145ef71d.chunk.js.map",
+    "index.html": "/PChanSoft/urboard_app/index.html",
+    "static/css/2.2a70f6c1.chunk.css.map": "/PChanSoft/urboard_app/static/css/2.2a70f6c1.chunk.css.map",
+    "static/css/main.494612ff.chunk.css.map": "/PChanSoft/urboard_app/static/css/main.494612ff.chunk.css.map",
+    "static/js/2.383cf01a.chunk.js.LICENSE.txt": "/PChanSoft/urboard_app/static/js/2.383cf01a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.177efa04.js",
+    "static/css/2.2a70f6c1.chunk.css",
+    "static/js/2.383cf01a.chunk.js",
+    "static/css/main.494612ff.chunk.css",
+    "static/js/main.90a7411c.chunk.js"
+  ]
+}
