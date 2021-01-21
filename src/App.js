@@ -7,7 +7,6 @@ import {
   Switch,
   Route,
   Link,
-  Redirect,
 } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
@@ -162,11 +161,6 @@ class Search extends React.Component{
               <div className='gameTitle'>{boardGames.name}</div>
               <div className='gameYear'>{boardGames.year_published}</div>
               <div className='gamePrice'>Price: {boardGames.price}</div>
-              <div><Redirect to={{
-                pathname: '/urboard_app/about',
-              state:{about:boardGames.id}
-            }} />
-            </div>
                 <Popup trigger={<button>Details</button>} modal>
                     <div>
                       <Details boardId={boardGames} boardCat={this.state.cat_data.categories} boardMech={this.state.mech_data.mechanics} />
@@ -267,20 +261,28 @@ class About extends React.Component{
 }
 const RandomBoard=props=>
   <div id="randomContainer">
-    <h2>{props.board[0].name}</h2>
     <div>
-      <img src={props.board[0].images.medium} alt='' />
+    <h2>{props.board[0].name}</h2>
+    <img src={props.board[0].images.medium} alt='' />
     </div>
+    <div className="details">
     <Year year={props.board[0].year_published} />
     <MinMaxPlayers min={props.board[0].min_players} max={props.board[0].max_players}/>
     <MinMaxTime min={props.board[0].min_playtime} max={props.board[0].max_playtime} />
     <Age age={props.board[0].min_age} />
+    </div>
+    <div>
     <h4>Categories</h4>
     <ul><IdCatMatcher board={props.board[0].categories} board_cats={props.board_cat} /></ul>
+    </div>
+    <div>
     <h4>Mechanics</h4>
     <ul><IdMechMatcher board={props.board[0].mechanics} board_mech={props.board_mech} /></ul>
+    </div>
+    <div>
     <h3>Description</h3>
     <div>{parse(`${props.board[0].description}`)}</div>
+    </div>
     <div id="picturesContainer">
     <Carousel width='600px' dynamicHeight='true'>
       {props.pictures && props.pictures.map(pictures =>
